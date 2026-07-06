@@ -1,0 +1,71 @@
+erDiagram
+    PUBLISHER ||--o{ IMPRINT : has
+    PUBLISHER ||--o{ BOOK : publishes
+    PUBLISHER ||--o{ SUBMISSION : receives
+    PUBLISHER ||--o{ CONTRACT : signs
+    PUBLISHER ||--o{ LICENSE : holds
+    PUBLISHER ||--o{ DATASET : produces
+    PUBLISHER ||--o{ ADDRESS : located_at
+    PUBLISHER ||--o{ CONTACT_METHOD : has
+
+    IMPRINT ||--o{ BOOK : publishes
+
+    PERSON ||--o{ BOOK : writes
+    PERSON ||--o{ BOOK : contributes_to
+    PERSON ||--o{ SUBMISSION : submits
+    PERSON ||--o{ ADDRESS : lives_at
+    PERSON ||--o{ CONTACT_METHOD : has
+
+    BOOK ||--o{ EDITION : has
+    BOOK ||--o{ REVIEW : receives
+    BOOK ||--o{ DIGITAL_ASSET : has
+    BOOK ||--o{ MEDIA_ASSET : has
+    BOOK ||--o{ CATEGORY : belongs_to
+    BOOK ||--o{ SERIES : part_of
+    BOOK ||--o{ COLLECTION : belongs_to
+    BOOK ||--o{ TAG : tagged_with
+    BOOK ||--o{ KEYWORD : has
+    BOOK ||--o{ AWARD : receives
+    BOOK ||--o{ EVENT : featured_at
+    BOOK ||--o{ CONTRACT : covered_by
+    BOOK ||--o{ IMPRINT : published_under
+
+    EDITION ||--o{ ISBN : has
+    EDITION ||--o{ PRINTING : has
+    EDITION ||--o{ INVENTORY : tracked_in
+    EDITION ||--o{ DISTRIBUTOR : distributed_by
+    EDITION ||--o{ BOOKSTORE : stocked_at
+    EDITION ||--|| LANGUAGE : written_in
+
+    PRINTER ||--o{ PRINTING : executes
+
+    PRINT_BATCH ||--o{ PRINTING : contains
+
+    WAREHOUSE ||--o{ INVENTORY : houses
+
+    DISTRIBUTOR ||--o{ BOOKSTORE : supplies
+
+    READER ||--o{ REVIEW : writes
+
+    AWARD ||--o{ ORGANIZATION : granted_by
+
+    EVENT ||--o{ ORGANIZATION : hosted_by
+    EVENT ||--o{ PERSON : features
+
+    ORGANIZATION ||--o{ EVENT : hosts
+    ORGANIZATION ||--o{ AWARD : grants
+
+    CONTRACT ||--o{ BOOK : covers
+    CONTRACT ||--o{ LICENSE : references
+
+    COUNTRY ||--o{ CITY : contains
+    CITY ||--o{ ADDRESS : contains
+
+    ROLE ||--o{ PERMISSION : grants
+    ROLE ||--o{ USER : assigned_to
+
+    USER ||--o{ AUDIT_LOG : performs
+    USER ||--o{ NOTIFICATION : receives
+    USER ||--o{ API_CLIENT : owns
+    USER ||--o{ VERIFICATION : performs
+    USER ||--o{ PERSON : linked_to

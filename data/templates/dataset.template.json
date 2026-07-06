@@ -1,0 +1,112 @@
+{
+  "template_id": "dataset-v1",
+  "entity_type": "dataset",
+  "version": "1.0.0",
+  "fields": {
+    "dataset_id": {
+      "type": "string",
+      "required": true,
+      "pattern": "^DST-[A-Z0-9]{10}$"
+    },
+    "dataset_name": {
+      "type": "string",
+      "required": true,
+      "description": "Human-readable dataset name"
+    },
+    "name_bn": {
+      "type": "string",
+      "required": true
+    },
+    "name_en": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    },
+    "version": {
+      "type": "string",
+      "required": true,
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the dataset"
+    },
+    "description": {
+      "type": "string",
+      "required": false
+    },
+    "license": {
+      "type": "string",
+      "required": true,
+      "default": "ODbL 1.0"
+    },
+    "language": {
+      "type": "string",
+      "required": true,
+      "default": "bn"
+    },
+    "country": {
+      "type": "string",
+      "required": true,
+      "default": "BD"
+    },
+    "record_count": {
+      "type": "integer",
+      "required": false,
+      "minimum": 0
+    },
+    "source_count": {
+      "type": "integer",
+      "required": false,
+      "minimum": 0
+    },
+    "verification_status": {
+      "type": "string",
+      "required": false,
+      "enum": ["draft", "pending", "verified", "partially_verified", "rejected", "archived"],
+      "default": "draft"
+    },
+    "file_url": {
+      "type": "string",
+      "required": false,
+      "format": "uri"
+    },
+    "row_count": {
+      "type": "integer",
+      "required": false
+    },
+    "is_public": {
+      "type": "boolean",
+      "required": false,
+      "default": true
+    }
+  },
+  "metadata": {
+    "created_at": { "type": "string", "format": "date-time", "required": true },
+    "updated_at": { "type": "string", "format": "date-time", "required": true }
+  },
+  "relationships": {
+    "publisher_id": {
+      "type": "string",
+      "pattern": "^PUB-[A-Z0-9]{10}$"
+    },
+    "sources": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^SRC-[A-Z0-9]{10}$" }
+    },
+    "included_entities": {
+      "type": "object",
+      "properties": {
+        "publishers": { "type": "integer" },
+        "authors": { "type": "integer" },
+        "books": { "type": "integer" },
+        "editions": { "type": "integer" }
+      }
+    }
+  },
+  "audit": {
+    "created_by": { "type": "string" },
+    "updated_by": { "type": "string" },
+    "change_reason": { "type": "string" }
+  }
+}

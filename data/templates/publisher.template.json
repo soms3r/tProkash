@@ -1,0 +1,296 @@
+{
+  "template_id": "publisher-v2",
+  "entity_type": "publisher",
+  "version": "2.0.0",
+  "field_classification": {
+    "required": ["publisher_id", "legal_name_bn", "legal_name_en", "display_name", "verification_status", "created_at", "updated_at"],
+    "recommended": ["slug", "trade_name_bn", "trade_name_en", "website_url", "founded_year", "status", "description_bn", "description_en", "logo_url", "services", "confidence_score", "source_ids", "primary_contact", "primary_email", "primary_phone", "address_city", "address_country"],
+    "optional": ["registration_number", "bin", "tin", "isbn_prefix", "parent_organization_id", "address_line_1", "address_line_2", "address_postal_code", "latitude", "longitude", "social_media_links", "alternate_names", "notes"],
+    "system": ["created_at", "updated_at", "deleted_at", "created_by", "updated_by"]
+  },
+  "fields": {
+    "publisher_id": {
+      "type": "string",
+      "class": "required",
+      "required": true,
+      "pattern": "^PUB-[A-Z0-9]{10}$",
+      "description": "Unique publisher identifier"
+    },
+    "legal_name_bn": {
+      "type": "string",
+      "class": "required",
+      "required": true,
+      "description": "Full legal name in Bengali (from government registration)"
+    },
+    "legal_name_en": {
+      "type": "string",
+      "class": "required",
+      "required": true,
+      "description": "Full legal name in English or transliteration"
+    },
+    "display_name": {
+      "type": "string",
+      "class": "required",
+      "required": true,
+      "maxLength": 255,
+      "description": "Preferred display name shown in UI and exports"
+    },
+    "trade_name_bn": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "Business/trade name in Bengali, if different from legal name"
+    },
+    "trade_name_en": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "Business/trade name in English, if different from legal name"
+    },
+    "slug": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "pattern": "^[a-z0-9-]+$",
+      "description": "URL-safe unique identifier"
+    },
+    "website_url": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "format": "uri",
+      "description": "Official website URL"
+    },
+    "founded_year": {
+      "type": "integer",
+      "class": "recommended",
+      "required": false,
+      "minimum": 1800,
+      "maximum": 2100,
+      "description": "Year founded"
+    },
+    "status": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "enum": ["active", "inactive", "defunct", "suspended"],
+      "default": "active",
+      "description": "Operational status"
+    },
+    "description_bn": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "Description in Bengali"
+    },
+    "description_en": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "Description in English"
+    },
+    "logo_url": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "format": "uri",
+      "description": "URL to publisher logo"
+    },
+    "services": {
+      "type": "array",
+      "class": "recommended",
+      "items": { "type": "string" },
+      "description": "Services offered (see publisher-services.md)"
+    },
+    "primary_contact": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "Primary contact person name"
+    },
+    "primary_email": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "format": "email",
+      "description": "Primary contact email"
+    },
+    "primary_phone": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "Primary contact phone"
+    },
+    "registration_number": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "description": "Government registration or trade license number"
+    },
+    "bin": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "pattern": "^\\d{9,13}$",
+      "description": "Business Identification Number (Bangladesh)"
+    },
+    "tin": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "pattern": "^\\d{11,13}$",
+      "description": "Tax Identification Number"
+    },
+    "isbn_prefix": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "pattern": "^\\d{1,7}$",
+      "description": "ISBN publisher prefix"
+    },
+    "parent_organization_id": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "pattern": "^ORG-[A-Z0-9]{10}$",
+      "description": "Parent organization if subsidiary"
+    },
+    "address_line_1": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "description": "Street address line 1"
+    },
+    "address_line_2": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "description": "Street address line 2"
+    },
+    "address_city": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "description": "City name"
+    },
+    "address_postal_code": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "description": "Postal code"
+    },
+    "address_country": {
+      "type": "string",
+      "class": "recommended",
+      "required": false,
+      "default": "BD",
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "latitude": {
+      "type": "number",
+      "class": "optional",
+      "required": false,
+      "minimum": -90,
+      "maximum": 90,
+      "description": "Geographic latitude"
+    },
+    "longitude": {
+      "type": "number",
+      "class": "optional",
+      "required": false,
+      "minimum": -180,
+      "maximum": 180,
+      "description": "Geographic longitude"
+    },
+    "social_media_links": {
+      "type": "object",
+      "class": "optional",
+      "required": false,
+      "description": "JSON object of social media platform URLs"
+    },
+    "alternate_names": {
+      "type": "array",
+      "class": "optional",
+      "items": { "type": "string" },
+      "description": "Alternative names or previous names"
+    },
+    "notes": {
+      "type": "string",
+      "class": "optional",
+      "required": false,
+      "description": "Internal notes (not for public display)"
+    },
+    "verification_status": {
+      "type": "string",
+      "class": "required",
+      "required": true,
+      "enum": ["draft", "pending", "verified", "partially_verified", "rejected", "archived"],
+      "default": "draft",
+      "description": "Current verification state"
+    },
+    "confidence_score": {
+      "type": "integer",
+      "class": "recommended",
+      "required": false,
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0,
+      "description": "Confidence in data accuracy (0-100)"
+    }
+  },
+  "identifiers": {
+    "internal_id": { "field": "publisher_id", "pattern": "^PUB-[A-Z0-9]{10}$" },
+    "trade_name": { "fields": ["trade_name_bn", "trade_name_en"] },
+    "legal_name": { "fields": ["legal_name_bn", "legal_name_en"] },
+    "display_name": { "field": "display_name" },
+    "registration_number": { "field": "registration_number" },
+    "bin": { "field": "bin" },
+    "tin": { "field": "tin" },
+    "isbn_prefix": { "field": "isbn_prefix" }
+  },
+  "metadata": {
+    "created_at": {
+      "type": "string",
+      "class": "system",
+      "required": true,
+      "format": "date-time",
+      "description": "Record creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "class": "system",
+      "required": true,
+      "format": "date-time",
+      "description": "Record last update timestamp"
+    }
+  },
+  "relationships": {
+    "imprints": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^IMP-[A-Z0-9]{10}$" },
+      "description": "References to imprint records"
+    },
+    "sources": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^SRC-[A-Z0-9]{10}$" },
+      "description": "References to source records"
+    },
+    "addresses": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^ADR-[A-Z0-9]{10}$" }
+    },
+    "contact_methods": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^CNM-[A-Z0-9]{10}$" }
+    },
+    "parent_organization": {
+      "type": "string",
+      "pattern": "^ORG-[A-Z0-9]{10}$"
+    }
+  },
+  "audit": {
+    "created_by": { "type": "string", "class": "system" },
+    "updated_by": { "type": "string", "class": "system" },
+    "change_reason": { "type": "string", "required": false }
+  }
+}

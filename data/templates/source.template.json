@@ -1,0 +1,82 @@
+{
+  "template_id": "source-v1",
+  "entity_type": "source",
+  "version": "1.0.0",
+  "fields": {
+    "source_id": {
+      "type": "string",
+      "required": true,
+      "pattern": "^SRC-[A-Z0-9]{10}$"
+    },
+    "source_type": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "official_website", "government_registry", "publisher_email",
+        "phone_confirmation", "isbn_agency", "book_fair_catalog",
+        "publisher_document", "social_media", "news_article",
+        "manual_entry", "community_submission", "other"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "description": "Descriptive title of the source"
+    },
+    "url": {
+      "type": "string",
+      "required": false,
+      "format": "uri"
+    },
+    "reference_number": {
+      "type": "string",
+      "required": false
+    },
+    "published_date": {
+      "type": "string",
+      "required": false,
+      "format": "date"
+    },
+    "author_name": {
+      "type": "string",
+      "required": false
+    },
+    "confidence_score": {
+      "type": "integer",
+      "required": false,
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "verification_status": {
+      "type": "string",
+      "required": false,
+      "enum": ["draft", "pending", "verified", "partially_verified", "rejected", "archived"],
+      "default": "draft"
+    }
+  },
+  "metadata": {
+    "created_at": { "type": "string", "format": "date-time", "required": true },
+    "updated_at": { "type": "string", "format": "date-time", "required": true }
+  },
+  "relationships": {
+    "verified_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity_type": { "type": "string" },
+          "entity_id": { "type": "string" }
+        }
+      }
+    }
+  },
+  "verification": {
+    "is_verified": { "type": "boolean", "default": false }
+  },
+  "audit": {
+    "created_by": { "type": "string" },
+    "updated_by": { "type": "string" },
+    "change_reason": { "type": "string" }
+  }
+}

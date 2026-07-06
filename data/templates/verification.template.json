@@ -1,0 +1,60 @@
+{
+  "template_id": "verification-v1",
+  "entity_type": "verification",
+  "version": "1.0.0",
+  "fields": {
+    "verification_id": {
+      "type": "string",
+      "required": true,
+      "pattern": "^VRF-[A-Z0-9]{10}$"
+    },
+    "verification_status": {
+      "type": "string",
+      "required": true,
+      "enum": ["draft", "pending", "verified", "partially_verified", "rejected", "archived"]
+    },
+    "confidence_score": {
+      "type": "integer",
+      "required": false,
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "notes": {
+      "type": "string",
+      "required": false
+    },
+    "verified_date": {
+      "type": "string",
+      "format": "date",
+      "required": false
+    }
+  },
+  "metadata": {
+    "created_at": { "type": "string", "format": "date-time", "required": true },
+    "updated_at": { "type": "string", "format": "date-time", "required": true }
+  },
+  "relationships": {
+    "entity": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "entity_type": { "type": "string" },
+        "entity_id": { "type": "string" }
+      }
+    },
+    "verified_by": {
+      "type": "string",
+      "pattern": "^USR-[A-Z0-9]{10}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^SRC-[A-Z0-9]{10}$"
+    }
+  },
+  "audit": {
+    "created_by": { "type": "string" },
+    "updated_by": { "type": "string" },
+    "change_reason": { "type": "string" }
+  }
+}

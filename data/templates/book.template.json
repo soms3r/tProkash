@@ -1,0 +1,108 @@
+{
+  "template_id": "book-v1",
+  "entity_type": "book",
+  "version": "1.0.0",
+  "fields": {
+    "book_id": {
+      "type": "string",
+      "required": true,
+      "pattern": "^BOK-[A-Z0-9]{10}$"
+    },
+    "title_bn": {
+      "type": "string",
+      "required": true,
+      "description": "Book title in Bengali"
+    },
+    "title_en": {
+      "type": "string",
+      "required": true,
+      "description": "Book title in English"
+    },
+    "subtitle_bn": {
+      "type": "string",
+      "required": false
+    },
+    "subtitle_en": {
+      "type": "string",
+      "required": false
+    },
+    "slug": {
+      "type": "string",
+      "required": true
+    },
+    "description_bn": {
+      "type": "string",
+      "required": false
+    },
+    "description_en": {
+      "type": "string",
+      "required": false
+    },
+    "num_pages": {
+      "type": "integer",
+      "required": false,
+      "minimum": 1
+    },
+    "publication_year": {
+      "type": "integer",
+      "required": false,
+      "minimum": 1800,
+      "maximum": 2100
+    },
+    "series_number": {
+      "type": "integer",
+      "required": false,
+      "minimum": 1
+    }
+  },
+  "metadata": {
+    "created_at": { "type": "string", "format": "date-time", "required": true },
+    "updated_at": { "type": "string", "format": "date-time", "required": true }
+  },
+  "relationships": {
+    "imprint_id": {
+      "type": "string",
+      "pattern": "^IMP-[A-Z0-9]{10}$",
+      "description": "Imprint under which this book is published"
+    },
+    "series_id": {
+      "type": "string",
+      "pattern": "^SER-[A-Z0-9]{10}$"
+    },
+    "authors": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^PER-[A-Z0-9]{10}$" }
+    },
+    "publishers": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^PUB-[A-Z0-9]{10}$" }
+    },
+    "editions": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^EDN-[A-Z0-9]{10}$" }
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^CAT-[A-Z0-9]{10}$" }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^TAG-[A-Z0-9]{10}$" }
+    }
+  },
+  "verification": {
+    "sources": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^SRC-[A-Z0-9]{10}$" }
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": ["draft", "pending", "verified", "partially_verified", "rejected", "archived"]
+    }
+  },
+  "audit": {
+    "created_by": { "type": "string" },
+    "updated_by": { "type": "string" },
+    "change_reason": { "type": "string" }
+  }
+}

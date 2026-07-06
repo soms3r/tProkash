@@ -1,0 +1,14 @@
+{
+  "name": "@tprokash/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "files": [
+    "tsconfig.json",
+    "tsconfig.nextjs.json",
+    "tsconfig.node.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

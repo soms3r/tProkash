@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="tProkash" modified="2026-07-06T00:00:00Z" agent="tProkash" version="1.0.0" type="google">
+  <diagram id="tProkash-ERD" name="tProkash ERD">
+    <mxGraphModel dx="1500" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4000" pageHeight="4000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Legend -->
+        <mxCell id="legend-bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;" parent="1" vertex="1">
+          <mxGeometry x="20" y="20" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-title" value="&lt;b&gt;tProkash Domain ERD&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Version 1.0.0 - Publishing Ecosystem&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="25" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-core" value="Core Entity" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="60" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-lookup" value="Lookup / Reference" style="text;html=1;strokeColor=none;fillColor=#fff2cc;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="85" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-junction" value="Junction" style="text;html=1;strokeColor=none;fillColor=#f8cecc;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="110" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-system" value="System / Auth" style="text;html=1;strokeColor=none;fillColor=#e1d5e7;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="200" y="60" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-geo" value="Geography" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="200" y="85" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-legal" value="Legal / Workflow" style="text;html=1;strokeColor=none;fillColor=#ffe6cc;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="200" y="110" width="120" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== CORE ENTITIES ======== -->
+
+        <!-- Publisher -->
+        <mxCell id="publisher" value="PUBLISHER&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;publisher_id | name | slug | status&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="60" y="180" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Imprint -->
+        <mxCell id="imprint" value="IMPRINT&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;imprint_id | name | slug&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="290" y="195" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Person -->
+        <mxCell id="person" value="PERSON&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;person_id | name | slug&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="60" y="310" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Book -->
+        <mxCell id="book" value="BOOK&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;book_id | title | slug | year&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="290" y="300" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Edition -->
+        <mxCell id="edition" value="EDITION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;edition_id | number | format | price&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="490" y="300" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- ISBN -->
+        <mxCell id="isbn" value="ISBN&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;isbn_id | code | format&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="680" y="305" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== PRODUCTION ======== -->
+
+        <!-- Printer -->
+        <mxCell id="printer" value="PRINTER&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;printer_id | name | services&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="490" y="480" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Printing -->
+        <mxCell id="printing" value="PRINTING&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;printing_id | qty | status | cost&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="490" y="410" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Print Batch -->
+        <mxCell id="print_batch" value="PRINT BATCH&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;print_batch_id | name | status&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="680" y="420" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Warehouse -->
+        <mxCell id="warehouse" value="WAREHOUSE&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;warehouse_id | name | capacity&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="490" y="570" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Inventory -->
+        <mxCell id="inventory" value="INVENTORY&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;inventory_id | qty_on_hand | threshold&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="680" y="565" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== DISTRIBUTION ======== -->
+
+        <!-- Distributor -->
+        <mxCell id="distributor" value="DISTRIBUTOR&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;distributor_id | name | area&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="100" y="480" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Bookstore -->
+        <mxCell id="bookstore" value="BOOKSTORE&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;bookstore_id | name | type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="100" y="570" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== COMMUNITY ======== -->
+
+        <!-- Reader -->
+        <mxCell id="reader" value="READER&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;reader_id | email | display_name&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="290" y="590" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Review -->
+        <mxCell id="review" value="REVIEW&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;review_id | rating | body&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="290" y="660" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== EVENTS ======== -->
+
+        <!-- Award -->
+        <mxCell id="award" value="AWARD&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;award_id | name | year&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="60" y="700" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Event -->
+        <mxCell id="event" value="EVENT&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;event_id | name | start_date | type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="60" y="790" width="160" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Organization -->
+        <mxCell id="organization" value="ORGANIZATION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;org_id | name | type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="290" y="750" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== LEGAL ======== -->
+
+        <!-- Contract -->
+        <mxCell id="contract" value="CONTRACT&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;contract_id | number | type | status&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="490" y="660" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- License -->
+        <mxCell id="license" value="LICENSE&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;license_id | type | rights | territory&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="680" y="660" width="140" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Submission -->
+        <mxCell id="submission" value="SUBMISSION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;submission_id | title | status&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="490" y="750" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== SYSTEM ======== -->
+
+        <!-- User -->
+        <mxCell id="user" value="USER&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;user_id | email | password_hash&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="900" y="180" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Role -->
+        <mxCell id="role" value="ROLE&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;role_id | name | description&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="900" y="270" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Permission -->
+        <mxCell id="permission" value="PERMISSION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;permission_id | resource | action&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="900" y="340" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Audit Log -->
+        <mxCell id="audit_log" value="AUDIT LOG&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;audit_log_id | action | entity | old/new&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="900" y="430" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- Notification -->
+        <mxCell id="notification" value="NOTIFICATION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;notification_id | type | subject&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="900" y="510" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- API Client -->
+        <mxCell id="api_client" value="API CLIENT&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;api_client_id | client_id | scope&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="900" y="590" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== GEOGRAPHY ======== -->
+
+        <!-- Country -->
+        <mxCell id="country" value="COUNTRY&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;country_id | code | name&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="180" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- City -->
+        <mxCell id="city" value="CITY&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;city_id | country_id | name&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="260" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Address -->
+        <mxCell id="address" value="ADDRESS&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;address_id | line_1 | postal_code&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="340" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== LOOKUP ======== -->
+
+        <!-- Language -->
+        <mxCell id="language" value="LANGUAGE&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;language_id | code | name_bn/en&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="450" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Category -->
+        <mxCell id="category" value="CATEGORY&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;category_id | slug | name&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="530" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Tag -->
+        <mxCell id="tag" value="TAG&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;tag_id | slug | name&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="610" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Keyword -->
+        <mxCell id="keyword" value="KEYWORD&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;keyword_id | word | language&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="690" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Series -->
+        <mxCell id="series" value="SERIES&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;series_id | name | slug&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="680" y="190" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Collection -->
+        <mxCell id="collection" value="COLLECTION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;collection_id | name | slug&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="680" y="260" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== DATA / CONTENT ======== -->
+
+        <!-- Digital Asset -->
+        <mxCell id="digital_asset" value="DIGITAL ASSET&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;asset_id | filename | mime_type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="290" y="450" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Media Asset -->
+        <mxCell id="media_asset" value="MEDIA ASSET&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;media_asset_id | url | type&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="290" y="520" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Dataset -->
+        <mxCell id="dataset" value="DATASET&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;dataset_id | version | license&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="680" y="750" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Source -->
+        <mxCell id="source" value="SOURCE&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;source_id | type | title&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="770" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Verification -->
+        <mxCell id="verification" value="VERIFICATION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;verification_id | level | date&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="840" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ======== EDGES (Relationships) ======== -->
+
+        <!-- Publisher -> Imprint -->
+        <mxCell id="edge-pub-imp" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;" parent="1" source="publisher" target="imprint" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Publisher -> Book -->
+        <mxCell id="edge-pub-bok" value="M:N (book_publisher)" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.25;exitY=1;entryX=0;entryY=0.5;strokeColor=#6c8ebf;" parent="1" source="publisher" target="book" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Publisher -> Submission -->
+        <mxCell id="edge-pub-sub" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.75;exitY=1;entryX=0;entryY=0.5;strokeColor=#d79b00;" parent="1" source="publisher" target="submission" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Imprint -> Book -->
+        <mxCell id="edge-imp-bok" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#6c8ebf;" parent="1" source="imprint" target="book" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Person -> Book (writes) -->
+        <mxCell id="edge-per-bok" value="M:N (book_author)" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;" parent="1" source="person" target="book" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Book -> Edition -->
+        <mxCell id="edge-bok-edn" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;" parent="1" source="book" target="edition" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Edition -> ISBN -->
+        <mxCell id="edge-edn-isbn" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;" parent="1" source="edition" target="isbn" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Edition -> Printing -->
+        <mxCell id="edge-edn-prt" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#6c8ebf;" parent="1" source="edition" target="printing" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Printer -> Printing -->
+        <mxCell id="edge-prn-prt" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.25;exitY=0;entryX=0.75;entryY=1;strokeColor=#6c8ebf;" parent="1" source="printer" target="printing" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Print Batch -> Printing -->
+        <mxCell id="edge-pbh-prt" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#6c8ebf;" parent="1" source="print_batch" target="printing" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Edition -> Inventory -->
+        <mxCell id="edge-edn-inv" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.75;entryX=0;entryY=0.5;strokeColor=#b85450;" parent="1" source="edition" target="inventory" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Warehouse -> Inventory -->
+        <mxCell id="edge-war-inv" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0.25;entryY=1;strokeColor=#b85450;" parent="1" source="warehouse" target="inventory" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Distributor -> Bookstore -->
+        <mxCell id="edge-dst-bst" value="M:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#6c8ebf;" parent="1" source="distributor" target="bookstore" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Book -> Review -->
+        <mxCell id="edge-bok-rvw" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#b85450;" parent="1" source="book" target="review" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Reader -> Review -->
+        <mxCell id="edge-rdr-rvw" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0;entryX=0;entryY=0.5;strokeColor=#b85450;" parent="1" source="reader" target="review" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Publisher -> Contract -->
+        <mxCell id="edge-pub-cnt" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;strokeColor=#d79b00;" parent="1" source="imprint" target="contract" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Contract -> License -->
+        <mxCell id="edge-cnt-lic" value="N:1" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#d79b00;" parent="1" source="contract" target="license" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- User -> Role -->
+        <mxCell id="edge-usr-rol" value="N:1" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.75;entryX=1;entryY=0.5;strokeColor=#9673a6;" parent="1" source="user" target="role" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Role -> Permission -->
+        <mxCell id="edge-rol-prm" value="M:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#9673a6;" parent="1" source="role" target="permission" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- User -> Audit Log -->
+        <mxCell id="edge-usr-alg" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#9673a6;" parent="1" source="user" target="audit_log" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Country -> City -->
+        <mxCell id="edge-ctr-cty" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#82b366;" parent="1" source="country" target="city" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- City -> Address -->
+        <mxCell id="edge-cty-adr" value="1:N" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#82b366;" parent="1" source="city" target="address" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

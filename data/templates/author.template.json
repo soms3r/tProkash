@@ -1,0 +1,87 @@
+{
+  "template_id": "author-v1",
+  "entity_type": "author",
+  "version": "1.0.0",
+  "fields": {
+    "person_id": {
+      "type": "string",
+      "required": true,
+      "pattern": "^PER-[A-Z0-9]{10}$",
+      "description": "Unique person identifier"
+    },
+    "name_bn": {
+      "type": "string",
+      "required": true,
+      "description": "Author name in Bengali"
+    },
+    "name_en": {
+      "type": "string",
+      "required": true,
+      "description": "Author name in English"
+    },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "description": "URL-safe unique identifier"
+    },
+    "birth_year": {
+      "type": "integer",
+      "required": false,
+      "minimum": 1800,
+      "maximum": 2100
+    },
+    "death_year": {
+      "type": "integer",
+      "required": false,
+      "minimum": 1800,
+      "maximum": 2100
+    },
+    "biography_bn": {
+      "type": "string",
+      "required": false
+    },
+    "biography_en": {
+      "type": "string",
+      "required": false
+    },
+    "website_url": {
+      "type": "string",
+      "required": false,
+      "format": "uri"
+    },
+    "pseudonym_of_id": {
+      "type": "string",
+      "required": false,
+      "pattern": "^PER-[A-Z0-9]{10}$"
+    }
+  },
+  "metadata": {
+    "created_at": { "type": "string", "format": "date-time", "required": true },
+    "updated_at": { "type": "string", "format": "date-time", "required": true }
+  },
+  "relationships": {
+    "books": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^BOK-[A-Z0-9]{10}$" }
+    },
+    "submissions": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^SUB-[A-Z0-9]{10}$" }
+    }
+  },
+  "verification": {
+    "sources": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^SRC-[A-Z0-9]{10}$" }
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": ["draft", "pending", "verified", "partially_verified", "rejected", "archived"]
+    }
+  },
+  "audit": {
+    "created_by": { "type": "string" },
+    "updated_by": { "type": "string" },
+    "change_reason": { "type": "string" }
+  }
+}

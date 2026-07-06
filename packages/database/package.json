@@ -1,0 +1,33 @@
+{
+  "name": "@tprokash/database",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --clean --dts",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "del-cli dist"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@tprokash/types": "workspace:*",
+    "@tprokash/config": "workspace:*"
+  },
+  "devDependencies": {
+    "@tprokash/eslint-config": "workspace:*",
+    "@tprokash/tsconfig": "workspace:*",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  }
+}
