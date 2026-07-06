@@ -1,31 +1,10 @@
-/* Database interface — no ORM, no SQL, no migrations */
-
-export interface ConnectionConfig {
-  url: string;
-  maxRetries?: number;
-  timeout?: number;
-}
-
-export interface DatabaseAdapter {
-  connect(config: ConnectionConfig): Promise<void>;
-  disconnect(): Promise<void>;
-  isConnected(): boolean;
-}
-
-export const createAdapter = (): DatabaseAdapter => {
-  let connected = false;
-
-  return {
-    async connect(_config: ConnectionConfig): Promise<void> {
-      connected = true;
-    },
-
-    async disconnect(): Promise<void> {
-      connected = false;
-    },
-
-    isConnected(): boolean {
-      return connected;
-    },
-  };
-};
+export { createClient, getClient, closeClient } from "./client";
+export { checkDatabaseHealth } from "./health";
+export { getDatabaseConfig } from "./config";
+export { runMigrations, getMigrationStatus, getDatabaseVersion } from "./migration";
+export type { DatabaseHealth } from "./health";
+export type { DatabaseConfig } from "./config";
+export type { Database } from "./types";
+export type { MigrateOptions, MigrationResult } from "./migration";
+export type { AppliedMigration, MigrationStatus } from "./migration";
+export type { DatabaseVersion } from "./migration";

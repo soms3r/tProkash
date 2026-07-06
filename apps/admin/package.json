@@ -13,11 +13,11 @@
     "clean": "del-cli .next dist"
   },
   "dependencies": {
+    "@tprokash/config": "workspace:*",
     "@tprokash/types": "workspace:*",
     "@tprokash/ui": "workspace:*",
     "@tprokash/utils": "workspace:*",
     "@tprokash/validation": "workspace:*",
-    "@tprokash/config": "workspace:*",
     "next": "^15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -28,6 +28,7 @@
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.7"
   }
 }

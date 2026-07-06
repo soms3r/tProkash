@@ -8,7 +8,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "clean": "del-cli dist"
+    "clean": "del-cli dist",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:check": "drizzle-kit generate --check",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -21,14 +26,18 @@
     }
   },
   "dependencies": {
+    "@tprokash/config": "workspace:*",
     "@tprokash/types": "workspace:*",
-    "@tprokash/config": "workspace:*"
+    "drizzle-orm": "^0.40.1",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
     "@tprokash/eslint-config": "workspace:*",
     "@tprokash/tsconfig": "workspace:*",
+    "@types/node": "^22.20.0",
+    "drizzle-kit": "^0.30.6",
     "tsup": "^8.3.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.7"
   }
 }
-
