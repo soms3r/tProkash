@@ -15,15 +15,17 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "devDependencies": {
     "@tprokash/eslint-config": "workspace:*",
     "@tprokash/tsconfig": "workspace:*",
+    "@types/node": "^22.10.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0"
   }
 }
+

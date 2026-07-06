@@ -1,16 +1,24 @@
-# Database
+# @tprokash/database
 
-Shared database access layer for tProkash.
+Database abstraction layer for tProkash.
 
-**Stack:** TypeScript, Drizzle ORM or Kysely
+## Status
 
-**What it contains:**
-- Schema definitions matching `database/schema.sql`
-- Migration runner and seed utilities
-- Query helpers and repository pattern
-- Connection management
-- Type-safe query builder wrappers
+Skeleton — no ORM, no SQL, no migrations. Provides a `DatabaseAdapter` interface for future implementation.
 
-**Depends on:** `@tprokash/types`, `database/schema.sql` (canonical SQL source)
+## Usage
 
-**Used by:** `apps/api`, internal services
+```ts
+import { createAdapter } from "@tprokash/database";
+
+const adapter = createAdapter();
+await adapter.connect({ url: process.env.DATABASE_URL });
+console.log(adapter.isConnected()); // true
+await adapter.disconnect();
+```
+
+## Design
+
+- Adapter pattern — swap implementations without changing consumer code.
+- No ORM dependency in this package.
+- Concrete implementations (PostgreSQL, SQLite, etc.) will live in separate packages.

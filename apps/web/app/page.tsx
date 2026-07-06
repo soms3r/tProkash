@@ -1,3 +1,8 @@
 export default function Home() {
-  return <main>tProkash Web</main>;
+  return (
+    <main>
+      <h1>tProkash</h1>
+      <p>Open Publishing Infrastructure</p>
+    </main>
+  );
 }
