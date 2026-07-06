@@ -10,33 +10,264 @@ Shared TypeScript type definitions for all tProkash entities and contracts.
 
 ---
 
+## Domain Layer
+
+The domain module (`src/domain/`) provides generic, reusable contracts that every business entity inherits.
+
+### Architecture
+
+```
+┌─────────────────────────────────────┐
+│          AggregateRoot              │
+│  (publishes DomainEvents)           │
+├─────────────────────────────────────┤
+│          BaseEntity                 │
+│  - id: Identifier                   │
+│  - audit: AuditMetadata             │
+│  - domainEvents: DomainEvent[]      │
+└────────────┬────────────────────────┘
+             │ implements
+             ▼
+┌─────────────────────────────────────┐
+│      Repository<T>                  │
+│  - findById(id)                     │
+│  - findAll(request)                 │
+│  - save(entity)                     │
+│  - update(entity)                   │
+│  - delete(id)                       │
+│  - search(request)                  │
+└─────────────────────────────────────┘
+```
+
+### Core Contracts
+
+#### BaseEntity
+
+```ts
+interface BaseEntity {
+  id: Identifier;       // branded string ID
+  audit: AuditMetadata; // creation, update, and deletion trail
+}
+```
+
+Every business entity extends `BaseEntity`.
+
+#### AggregateRoot
+
+```ts
+interface AggregateRoot<TEvent extends DomainEvent = DomainEvent> extends BaseEntity {
+  domainEvents: TEvent[];
+}
+```
+
+An `AggregateRoot` is an entity that publishes `DomainEvent`s. Changes to the aggregate produce events that other parts of the system consume.
+
+#### Repository Pattern
+
+```ts
+interface Repository<T extends BaseEntity, TId extends Identifier = Identifier> {
+  findById(id: TId): Promise<T | null>;
+  findAll(request?: PageRequest): Promise<PageResult<T>>;
+  save(entity: T): Promise<T>;
+  update(entity: T): Promise<T>;
+  delete(id: TId): Promise<void>;
+  exists(id: TId): Promise<boolean>;
+  count(filter?: Filter[]): Promise<number>;
+  search(request: SearchRequest): Promise<SearchResult<T>>;
+}
+```
+
+The `Repository` interface is generic and framework-agnostic. Implementations can use any persistence strategy (PostgreSQL via Drizzle, in-memory, etc.).
+
+---
+
+## Pagination
+
+#### PageRequest
+
+```ts
+interface PageRequest {
+  page: number;       // 1-indexed
+  limit: number;      // items per page
+  sort?: Sort[];      // optional sorting
+}
+```
+
+#### PageResult
+
+```ts
+interface PageResult<T> {
+  data: T[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+```
+
+---
+
+## Search
+
+#### SearchRequest
+
+```ts
+interface SearchRequest {
+  query?: string;     // free-text search
+  filter?: Filter[];  // structured filters
+  sort?: Sort[];
+  page?: number;
+  limit?: number;
+}
+```
+
+#### SearchResult
+
+```ts
+interface SearchResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  query?: string;     // echoed back for context
+}
+```
+
+---
+
+## Sorting
+
+```ts
+type SortDirection = "ASC" | "DESC";
+
+interface Sort {
+  field: string;
+  direction: SortDirection;
+}
+```
+
+---
+
+## Filter
+
+```ts
+type FilterOperator =
+  | "EQ"         // equal
+  | "NEQ"        // not equal
+  | "GT"         // greater than
+  | "GTE"        // greater than or equal
+  | "LT"         // less than
+  | "LTE"        // less than or equal
+  | "IN"         // in array
+  | "NOT_IN"     // not in array
+  | "LIKE"       // SQL LIKE
+  | "ILIKE"      // case-insensitive LIKE
+  | "IS_NULL"    // is null
+  | "IS_NOT_NULL"// is not null
+  | "BETWEEN"    // between two values
+  | "CONTAINS";  // array contains
+
+interface Filter {
+  field: string;
+  operator: FilterOperator;
+  value: unknown;
+}
+```
+
+Multiple filters are typically combined with AND logic at the repository level.
+
+---
+
+## Domain Events
+
+```ts
+interface DomainEvent {
+  eventName: string;
+  eventId: string;
+  aggregateId: Identifier;
+  occurredOn: Timestamp;
+  payload?: Record<string, unknown>;
+}
+```
+
+Events are produced by `AggregateRoot`s and consumed by event handlers for side effects (notifications, analytics, integrations).
+
+---
+
+## Error Hierarchy
+
+```
+Error
+ └── DomainError (abstract)
+      ├── NotFoundError     (404)
+      ├── ValidationError   (400)
+      └── ConflictError     (409)
+```
+
+```ts
+abstract class DomainError extends Error {
+  abstract readonly code: string;
+  abstract readonly statusCode: number;
+  readonly occurredOn: string;
+}
+
+class NotFoundError extends DomainError      // code: "NOT_FOUND"
+class ValidationError extends DomainError     // code: "VALIDATION_ERROR"
+class ConflictError extends DomainError       // code: "CONFLICT"
+```
+
+Each error has a machine-readable `code` and HTTP `statusCode` for API responses.
+
+---
+
+## Metadata
+
+Arbitrary key-value metadata that can be attached to any entity.
+
+```ts
+interface Metadata {
+  key: string;
+  value: string;
+  namespace?: string;
+}
+
+interface MetadataMap {
+  [namespace: string]: Record<string, string>;
+}
+```
+
+---
+
 ## Identity Architecture
 
-The identity module (`src/identity/`) provides a generic, reusable identifier framework that every business entity (Publisher, Author, Book, Editor, etc.) uses.
+The identity module (`src/identity/`) provides a generic, reusable identifier framework.
 
-### Core Concept: GenericIdentifier
+### GenericIdentifier
 
 Every entity can have **many identifiers**, but exactly **one primary identifier**.
 
 ```ts
 interface GenericIdentifier {
-  id: string;               // unique record ID for this identifier
-  entityId: string;         // the entity this identifier belongs to
-  type: IdentifierType;     // UUID, SLUG, EMAIL, PHONE, etc.
-  value: string;            // the actual identifier value
-  slug?: string;            // URL-friendly slug
-  source: IdentifierSource; // SYSTEM | USER | EXTERNAL | MIGRATION | API
-  isPrimary: boolean;       // exactly one per entity is primary
-  status: IdentifierStatus; // ACTIVE | INACTIVE | SUSPENDED | RETIRED | HISTORICAL
-  visibility: Visibility;   // PUBLIC | PRIVATE | INTERNAL | RESTRICTED
+  id: string;
+  entityId: string;
+  type: IdentifierType;
+  value: string;
+  slug?: string;
+  source: IdentifierSource;
+  isPrimary: boolean;
+  status: IdentifierStatus;
+  visibility: Visibility;
   verification?: IdentifierVerification;
   ownership?: Ownership;
-  audit: AuditInfo;         // creation and update trail
-  deletedAt?: Timestamp;    // soft delete support
+  audit: AuditMetadata;
+  deletedAt?: Timestamp;
 }
 ```
 
-### Supported Identifier Types
+### Identifier Types
 
 | Type | Description |
 |------|-------------|
@@ -68,16 +299,10 @@ interface GenericIdentifier {
 ## Identifier Lifecycle
 
 ```
-ACTIVE ──→ INACTIVE ──→ ACTIVE     (toggling)
-ACTIVE ──→ SUSPENDED ──→ ACTIVE    (suspension/reversal)
-ACTIVE ──→ RETIRED ──→ HISTORICAL  (replaced by new identifier)
+ACTIVE ──→ INACTIVE ──→ ACTIVE
+ACTIVE ──→ SUSPENDED ──→ ACTIVE
+ACTIVE ──→ RETIRED ──→ HISTORICAL
 ```
-
-- **ACTIVE** — Currently in use as a valid identifier
-- **INACTIVE** — Temporarily not in use (can be reactivated)
-- **SUSPENDED** — Suspended due to policy violation or dispute
-- **RETIRED** — Replaced by a newer identifier (old value preserved)
-- **HISTORICAL** — No longer actively used, kept for audit trails
 
 ### Primary Identifier Rules
 
@@ -85,134 +310,54 @@ ACTIVE ──→ RETIRED ──→ HISTORICAL  (replaced by new identifier)
 2. The primary identifier must have status `ACTIVE`.
 3. When the primary identifier is retired, another identifier MUST be promoted to primary.
 4. A retired identifier cannot be primary.
-5. The primary identifier is used as the canonical reference in external systems.
-
-### Soft Delete
-
-Identifiers support soft deletion via `deletedAt: Timestamp`. A soft-deleted identifier:
-- Is excluded from active queries
-- Remains in the database for audit
-- Can be restored by clearing `deletedAt`
-- Still counts toward the identifier history of the entity
 
 ---
 
 ## Verification Lifecycle
 
 ```
-PENDING ──→ VERIFIED ──→ EXPIRED ──→ VERIFIED (re-verify)
-PENDING ──→ FAILED      (try again → PENDING)
-VERIFIED ──→ REVOKED    (permanent)
+PENDING ──→ VERIFIED ──→ EXPIRED ──→ VERIFIED
+PENDING ──→ FAILED
+VERIFIED ──→ REVOKED
 ```
-
-### Verification Methods
-
-| Method | Description |
-|--------|-------------|
-| `MANUAL` | Manually verified by an operator |
-| `EMAIL` | Email verification (click link) |
-| `PHONE` | SMS/phone verification |
-| `DOCUMENT` | Document-based verification |
-| `API_LOOKUP` | Verified via external API |
-| `BANK_VERIFICATION` | Bank account verification |
-| `GOVERNMENT_DATABASE` | Government database lookup |
-| `THIRD_PARTY` | Third-party verification service |
-| `AUTOMATED` | Automated system check |
-| `CUSTOM` | Custom verification method |
-
-### Verification States
-
-- **PENDING** — Verification initiated, awaiting completion
-- **VERIFIED** — Successfully verified
-- **FAILED** — Verification attempt failed (can retry)
-- **EXPIRED** — Previously verified, now expired (re-verify)
-- **REVOKED** — Verification permanently revoked (cannot be reinstated)
 
 ---
 
-## Ownership
-
-Each identifier can have an associated ownership record:
+## AuditMetadata
 
 ```ts
-interface Ownership {
-  ownerType: OwnerType;   // USER | ORGANIZATION | SYSTEM | ENTITY
-  ownerId: string;         // reference to the owner
-  role?: string;           // e.g., "admin", "editor", "viewer"
-  assignedAt: Timestamp;   // when ownership was assigned
-  assignedBy?: string;     // who assigned the ownership
+interface AuditMetadata {
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  createdBy?: Identifier;
+  updatedBy?: Identifier;
+  deletedAt?: Timestamp;
+  deletedBy?: Identifier;
+  version: number;
 }
 ```
 
----
-
-## Visibility
-
-| Level | Description |
-|-------|-------------|
-| `PUBLIC` | Visible to everyone |
-| `PRIVATE` | Visible only to the owner |
-| `INTERNAL` | Visible within the organization |
-| `RESTRICTED` | Visible to specific roles only |
-
----
-
-## Slug
-
-```ts
-interface SlugOptions {
-  maxLength: number;
-  allowUnicode: boolean;
-  separator: string;
-  lowercase: boolean;
-}
-
-interface SlugValidation {
-  isValid: boolean;
-  slug: string;
-  errors?: string[];
-}
-```
-
-Default slug options:
-- `maxLength`: 200
-- `allowUnicode`: false
-- `separator`: "-"
-- `lowercase`: true
+All entities carry audit metadata for tracking creation, updates, soft deletion, and optimistic concurrency (`version`).
 
 ---
 
 ## Shared Foundation Types
 
 ```ts
-type Timestamp = string;                    // ISO 8601 string
-
-type Identifier = string & { __brand: "Identifier" };  // branded entity ID
-
-interface AuditInfo {
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  createdBy?: Identifier;
-  updatedBy?: Identifier;
-}
-
-interface BaseEntity {
-  id: Identifier;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-
-interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
+type Timestamp = string;                             // ISO 8601 string
+type Identifier = string & { __brand: "Identifier" }; // branded entity ID
 
 interface ApiResponse<T> {
   success: boolean;
   data: T;
   message?: string;
-  pagination?: Pagination;
+  pagination?: PageResultMetadata;
+}
+
+interface PageResultMetadata {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 ```

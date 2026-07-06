@@ -1,4 +1,4 @@
-import type { AuditInfo, Timestamp } from "..";
+import type { AuditMetadata, Timestamp } from "..";
 import type { IdentifierStatus } from "./status";
 import type { IdentifierVerification } from "./verification";
 import type { Ownership } from "./ownership";
@@ -37,6 +37,6 @@ export interface GenericIdentifier {
   visibility: Visibility;
   verification?: IdentifierVerification;
   ownership?: Ownership;
-  audit: AuditInfo;
+  audit: AuditMetadata;
   deletedAt?: Timestamp;
 }
