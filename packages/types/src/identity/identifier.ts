@@ -11,10 +11,16 @@ export type IdentifierType =
   | "TRADE_LICENSE"
   | "BIN"
   | "TIN"
+  | "TAX_ID"
   | "ISBN_PREFIX"
   | "WEBSITE"
   | "EMAIL"
   | "PHONE"
+  | "ISNI"
+  | "GRID"
+  | "ROR"
+  | "DUNS"
+  | "LEI"
   | "EXTERNAL_REGISTRY_ID"
   | "CUSTOM";
 

@@ -1,0 +1,10 @@
+export type { SearchQuery, SearchRequest } from "./query";
+export type { SearchFilter, SearchFilterOperator, GeoFilter, RangeFilter, DateRange, NumericRange } from "./filter";
+export type { SearchSort, SortOrder, BoostRule, SearchWeight } from "./sort";
+export type { SearchFacet, FacetBucket, Aggregation } from "./facet";
+export type { SearchPagination, PaginationType, CursorPage, OffsetPage } from "./pagination";
+export type { SearchHit, SearchResult, SearchStats, SearchResponse } from "./result";
+export type { Highlight, HighlightFragment } from "./highlight";
+export type { Suggestion, SuggestionType, SuggestionGroup } from "./suggestion";
+export type { EngineType, SearchMode, SearchFieldType, TaxonomyExpansion, SearchEngineCapabilities } from "./types";
+export { SearchError } from "./types";

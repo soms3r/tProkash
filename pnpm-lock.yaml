@@ -96,6 +96,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.4
+      drizzle-orm:
+        specifier: ^0.40.1
+        version: 0.40.1(gel@2.2.0)(postgres@3.4.9)
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
