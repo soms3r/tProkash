@@ -18,3 +18,4 @@ export interface PageResultMetadata {
 
 export * from "./identity";
 export * from "./domain";
+export * from "./lifecycle";

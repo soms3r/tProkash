@@ -10,334 +10,261 @@ Shared TypeScript type definitions for all tProkash entities and contracts.
 
 ---
 
-## Domain Layer
+## Lifecycle Framework
 
-The domain module (`src/domain/`) provides generic, reusable contracts that every business entity inherits.
+The lifecycle module (`src/lifecycle/`) provides a generic state machine framework that every business entity uses to manage its state transitions.
 
 ### Architecture
 
 ```
-┌─────────────────────────────────────┐
-│          AggregateRoot              │
-│  (publishes DomainEvents)           │
-├─────────────────────────────────────┤
-│          BaseEntity                 │
-│  - id: Identifier                   │
-│  - audit: AuditMetadata             │
-│  - domainEvents: DomainEvent[]      │
-└────────────┬────────────────────────┘
-             │ implements
+            WorkflowDefinition
+  ┌─────────────────────────────────────┐
+  │  initialState: Draft                │
+  │  allowedTransitions: [{from, to}]   │
+  │  terminalStates: [Archived,Deleted] │
+  └──────────┬──────────────────────────┘
+             │ validates
              ▼
-┌─────────────────────────────────────┐
-│      Repository<T>                  │
-│  - findById(id)                     │
-│  - findAll(request)                 │
-│  - save(entity)                     │
-│  - update(entity)                   │
-│  - delete(id)                       │
-│  - search(request)                  │
-└─────────────────────────────────────┘
+         Entity State
+  ┌─────────────────────────────────────┐
+  │  currentState: Published            │
+  │  enteredAt: "2026-07-06T..."        │
+  │  history: LifecycleHistory[]        │
+  └─────────────────────────────────────┘
 ```
 
-### Core Contracts
+### Base States
 
-#### BaseEntity
+Every entity starts with these base states. Custom states can be added per entity.
 
-```ts
-interface BaseEntity {
-  id: Identifier;       // branded string ID
-  audit: AuditMetadata; // creation, update, and deletion trail
-}
-```
+| State | Description |
+|-------|-------------|
+| `DRAFT` | Initial creation, not yet ready for review |
+| `IMPORTED` | Imported from an external source |
+| `PENDING_REVIEW` | Awaiting human review |
+| `PENDING_VERIFICATION` | Awaiting verification (email, document, etc.) |
+| `VERIFIED` | Successfully verified |
+| `PUBLISHED` | Live and visible |
+| `SUSPENDED` | Temporarily disabled |
+| `ARCHIVED` | No longer active, preserved for audit |
+| `DELETED` | Soft-deleted |
 
-Every business entity extends `BaseEntity`.
-
-#### AggregateRoot
-
-```ts
-interface AggregateRoot<TEvent extends DomainEvent = DomainEvent> extends BaseEntity {
-  domainEvents: TEvent[];
-}
-```
-
-An `AggregateRoot` is an entity that publishes `DomainEvent`s. Changes to the aggregate produce events that other parts of the system consume.
-
-#### Repository Pattern
+### LifecycleState
 
 ```ts
-interface Repository<T extends BaseEntity, TId extends Identifier = Identifier> {
-  findById(id: TId): Promise<T | null>;
-  findAll(request?: PageRequest): Promise<PageResult<T>>;
-  save(entity: T): Promise<T>;
-  update(entity: T): Promise<T>;
-  delete(id: TId): Promise<void>;
-  exists(id: TId): Promise<boolean>;
-  count(filter?: Filter[]): Promise<number>;
-  search(request: SearchRequest): Promise<SearchResult<T>>;
-}
-```
+type LifecycleState = BaseState | (string & {});
 
-The `Repository` interface is generic and framework-agnostic. Implementations can use any persistence strategy (PostgreSQL via Drizzle, in-memory, etc.).
-
----
-
-## Pagination
-
-#### PageRequest
-
-```ts
-interface PageRequest {
-  page: number;       // 1-indexed
-  limit: number;      // items per page
-  sort?: Sort[];      // optional sorting
-}
-```
-
-#### PageResult
-
-```ts
-interface PageResult<T> {
-  data: T[];
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
-}
+// Use BASE_STATES constant for iteration:
+import { BASE_STATES } from "@tprokash/types";
+// ["DRAFT", "IMPORTED", "PENDING_REVIEW", ...]
 ```
 
 ---
 
-## Search
+## Workflow Definition
 
-#### SearchRequest
+A `WorkflowDefinition` defines the legal state machine for an entity.
 
 ```ts
-interface SearchRequest {
-  query?: string;     // free-text search
-  filter?: Filter[];  // structured filters
-  sort?: Sort[];
-  page?: number;
-  limit?: number;
+interface WorkflowDefinition<TState = LifecycleState> {
+  initialState: TState;
+  allowedTransitions: AllowedTransition<TState>[];
+  terminalStates: TState[];
+  customStates?: TState[];
+  config?: WorkflowConfig;
 }
 ```
 
-#### SearchResult
+### allowedTransitions
 
 ```ts
-interface SearchResult<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-  query?: string;     // echoed back for context
+interface AllowedTransition<TState = string> {
+  from: TState;
+  to: TState;
+  label?: string;
+  requireReason?: boolean;
+  requireVerification?: boolean;
+  allowedActorTypes?: string[];
 }
+```
+
+Defines every legal from→to pair. If a transition is not listed, it is forbidden.
+
+### Example: Publishing Workflow
+
+```ts
+const publisherWorkflow: WorkflowDefinition = {
+  initialState: "DRAFT",
+  allowedTransitions: [
+    { from: "DRAFT", to: "PENDING_REVIEW", label: "Submit for Review" },
+    { from: "PENDING_REVIEW", to: "DRAFT", label: "Send Back to Draft", requireReason: true },
+    { from: "PENDING_REVIEW", to: "VERIFIED", label: "Verify" },
+    { from: "VERIFIED", to: "PUBLISHED", label: "Publish" },
+    { from: "PUBLISHED", to: "SUSPENDED", label: "Suspend", requireReason: true },
+    { from: "SUSPENDED", to: "PUBLISHED", label: "Reinstate" },
+    { from: "PUBLISHED", to: "ARCHIVED", label: "Archive" },
+    { from: "*", to: "DELETED", label: "Soft Delete", requireReason: true },
+  ],
+  terminalStates: ["ARCHIVED", "DELETED"],
+};
 ```
 
 ---
 
-## Sorting
+## Transition History
+
+Every state change is recorded as a `LifecycleHistory` entry.
 
 ```ts
-type SortDirection = "ASC" | "DESC";
-
-interface Sort {
-  field: string;
-  direction: SortDirection;
+interface LifecycleHistory<TState = string> extends LifecycleTransition<TState> {
+  id: string;                  // unique history entry ID
+  sequenceNumber: number;      // monotonically increasing
+  rollbackOf?: string;         // ID of the transition being rolled back
+  rollbackTarget?: TState;     // state to restore on rollback
 }
 ```
+
+### LifecycleTransition
+
+```ts
+interface LifecycleTransition<TState = LifecycleState> {
+  from: TState;
+  to: TState;
+  actor: LifecycleActor;
+  reason: TransitionReason;
+  timestamp: Timestamp;
+  source?: string;
+  metadata?: Record<string, unknown>;
+}
+```
+
+### Rollback Support
+
+Each history entry can reference a `rollbackOf` ID. To rollback a transition:
+
+1. Create a new transition from the current state back to the original state.
+2. Set `rollbackOf` to the ID of the transition being undone.
+3. Set `rollbackTarget` to the original state.
+
+The history forms an append-only log. Rolls back are **new entries**, not deletions.
 
 ---
 
-## Filter
+## Actor
+
+Who or what performed the transition.
 
 ```ts
-type FilterOperator =
-  | "EQ"         // equal
-  | "NEQ"        // not equal
-  | "GT"         // greater than
-  | "GTE"        // greater than or equal
-  | "LT"         // less than
-  | "LTE"        // less than or equal
-  | "IN"         // in array
-  | "NOT_IN"     // not in array
-  | "LIKE"       // SQL LIKE
-  | "ILIKE"      // case-insensitive LIKE
-  | "IS_NULL"    // is null
-  | "IS_NOT_NULL"// is not null
-  | "BETWEEN"    // between two values
-  | "CONTAINS";  // array contains
+type ActorType = "USER" | "SYSTEM" | "SERVICE" | "API" | "AUTOMATION";
 
-interface Filter {
-  field: string;
-  operator: FilterOperator;
-  value: unknown;
-}
-```
-
-Multiple filters are typically combined with AND logic at the repository level.
-
----
-
-## Domain Events
-
-```ts
-interface DomainEvent {
-  eventName: string;
-  eventId: string;
-  aggregateId: Identifier;
-  occurredOn: Timestamp;
-  payload?: Record<string, unknown>;
-}
-```
-
-Events are produced by `AggregateRoot`s and consumed by event handlers for side effects (notifications, analytics, integrations).
-
----
-
-## Error Hierarchy
-
-```
-Error
- └── DomainError (abstract)
-      ├── NotFoundError     (404)
-      ├── ValidationError   (400)
-      └── ConflictError     (409)
-```
-
-```ts
-abstract class DomainError extends Error {
-  abstract readonly code: string;
-  abstract readonly statusCode: number;
-  readonly occurredOn: string;
-}
-
-class NotFoundError extends DomainError      // code: "NOT_FOUND"
-class ValidationError extends DomainError     // code: "VALIDATION_ERROR"
-class ConflictError extends DomainError       // code: "CONFLICT"
-```
-
-Each error has a machine-readable `code` and HTTP `statusCode` for API responses.
-
----
-
-## Metadata
-
-Arbitrary key-value metadata that can be attached to any entity.
-
-```ts
-interface Metadata {
-  key: string;
-  value: string;
-  namespace?: string;
-}
-
-interface MetadataMap {
-  [namespace: string]: Record<string, string>;
+interface LifecycleActor {
+  type: ActorType;
+  id?: string;     // user ID, service name, etc.
+  label?: string;  // human-readable display name
 }
 ```
 
 ---
 
-## Identity Architecture
+## Transition Reason
 
-The identity module (`src/identity/`) provides a generic, reusable identifier framework.
-
-### GenericIdentifier
-
-Every entity can have **many identifiers**, but exactly **one primary identifier**.
+Why the transition occurred.
 
 ```ts
-interface GenericIdentifier {
-  id: string;
-  entityId: string;
-  type: IdentifierType;
-  value: string;
-  slug?: string;
-  source: IdentifierSource;
-  isPrimary: boolean;
-  status: IdentifierStatus;
-  visibility: Visibility;
-  verification?: IdentifierVerification;
-  ownership?: Ownership;
-  audit: AuditMetadata;
-  deletedAt?: Timestamp;
+type TransitionReasonType =
+  | "MANUAL"       // performed by a human
+  | "IMPORT"       // bulk import process
+  | "SYSTEM"       // system-initiated
+  | "API"          // external API call
+  | "VERIFICATION" // verification succeeded/failed
+  | "MIGRATION"    // migrated from legacy system
+  | "AUTOMATION"   // automated workflow
+  | "UNKNOWN";     // unclassified
+
+type TransitionSource =
+  | "USER_INTERFACE"
+  | "API"
+  | "IMPORT"
+  | "MIGRATION"
+  | "SYSTEM"
+  | "EXTERNAL"
+  | "SCHEDULED_TASK";
+
+interface TransitionReason {
+  type: TransitionReasonType;
+  detail?: string;
+  source?: TransitionSource;
+  timestamp?: Timestamp;
 }
 ```
 
-### Identifier Types
-
-| Type | Description |
-|------|-------------|
-| `UUID` | System-generated unique identifier |
-| `SLUG` | URL-friendly textual identifier |
-| `REGISTRATION_NUMBER` | Government/business registration |
-| `TRADE_LICENSE` | Trade license number |
-| `BIN` | Business Identification Number |
-| `TIN` | Tax Identification Number |
-| `ISBN_PREFIX` | ISBN publisher prefix |
-| `WEBSITE` | Website URL |
-| `EMAIL` | Email address |
-| `PHONE` | Phone number |
-| `EXTERNAL_REGISTRY_ID` | ID from an external registry |
-| `CUSTOM` | Custom identifier type |
-
-### Identifier Sources
-
-| Source | Description |
-|--------|-------------|
-| `SYSTEM` | Auto-generated by the system (e.g., UUID) |
-| `USER` | Provided by the user during data entry |
-| `EXTERNAL` | Imported from an external system |
-| `MIGRATION` | Migrated from a legacy system |
-| `API` | Created via API integration |
-
 ---
 
-## Identifier Lifecycle
+## Workflow Status
 
-```
-ACTIVE ──→ INACTIVE ──→ ACTIVE
-ACTIVE ──→ SUSPENDED ──→ ACTIVE
-ACTIVE ──→ RETIRED ──→ HISTORICAL
-```
-
-### Primary Identifier Rules
-
-1. Each entity MUST have exactly **one** primary identifier at all times.
-2. The primary identifier must have status `ACTIVE`.
-3. When the primary identifier is retired, another identifier MUST be promoted to primary.
-4. A retired identifier cannot be primary.
-
----
-
-## Verification Lifecycle
-
-```
-PENDING ──→ VERIFIED ──→ EXPIRED ──→ VERIFIED
-PENDING ──→ FAILED
-VERIFIED ──→ REVOKED
-```
-
----
-
-## AuditMetadata
+The current status of an entity within its workflow.
 
 ```ts
-interface AuditMetadata {
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  createdBy?: Identifier;
-  updatedBy?: Identifier;
-  deletedAt?: Timestamp;
-  deletedBy?: Identifier;
-  version: number;
+interface StatusInfo<TState = LifecycleState> {
+  currentState: TState;
+  enteredAt: Timestamp;
+  actor?: LifecycleActor;
+  reason?: TransitionReason;
+  metadata?: Record<string, unknown>;
+}
+
+interface WorkflowStatus<TState = LifecycleState> {
+  definition: WorkflowDefinition<TState>;
+  current: StatusInfo<TState>;
+  lastTransition?: LifecycleHistory<TState>;
+  availableTransitions: TState[];
+  totalTransitions: number;
+  isTerminal: boolean;
 }
 ```
 
-All entities carry audit metadata for tracking creation, updates, soft deletion, and optimistic concurrency (`version`).
+---
+
+## Extending Workflows
+
+To add custom states for a specific entity:
+
+```ts
+type PublisherState = LifecycleState | "REGISTERED" | "DUE_DILIGENCE";
+
+const publisherWorkflow: WorkflowDefinition<PublisherState> = {
+  initialState: "DRAFT",
+  allowedTransitions: [
+    { from: "DRAFT", to: "REGISTERED" },
+    { from: "REGISTERED", to: "DUE_DILIGENCE" },
+    { from: "DUE_DILIGENCE", to: "VERIFIED" },
+    // ... base states are also available
+  ],
+  terminalStates: ["ARCHIVED", "DELETED"],
+  customStates: ["REGISTERED", "DUE_DILIGENCE"],
+};
+```
+
+---
+
+## Rollback Philosophy
+
+- Transitions are **append-only**. History is never mutated or deleted.
+- Rollback creates a **new transition** from current state back to the original state.
+- The `rollbackOf` field links the rollback entry to the original transition.
+- This preserves a complete audit trail of all state changes.
+- Soft delete (`DELETED` state) uses the same transition mechanism — no separate table needed.
+
+---
+
+## Integration with Identity
+
+When combined with the identity framework, each entity has both:
+
+1. A set of `GenericIdentifier`s (UUID, slug, email, etc.)
+2. A `WorkflowStatus` tracking its lifecycle
+
+The primary identifier is established when the entity enters `PUBLISHED` state.
 
 ---
 
@@ -347,17 +274,30 @@ All entities carry audit metadata for tracking creation, updates, soft deletion,
 type Timestamp = string;                             // ISO 8601 string
 type Identifier = string & { __brand: "Identifier" }; // branded entity ID
 
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-  pagination?: PageResultMetadata;
+interface AuditInfo {
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  createdBy?: Identifier;
+  updatedBy?: Identifier;
 }
 
-interface PageResultMetadata {
+interface BaseEntity {
+  id: Identifier;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+interface Pagination {
   page: number;
   limit: number;
   total: number;
   totalPages: number;
+}
+
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+  pagination?: Pagination;
 }
 ```
