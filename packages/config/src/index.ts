@@ -33,6 +33,7 @@ const envSchema = z.object({
     .enum(["debug", "info", "warn", "error"])
     .default("info"),
   CORS_ORIGIN: z.string().default("*"),
+  DATABASE_URL: z.string().optional(),
 });
 
 export type Environment = z.infer<typeof envSchema>;

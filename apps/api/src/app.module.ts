@@ -5,8 +5,10 @@ import { AllExceptionsFilter } from "./common/filters/exception.filter";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
 import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
 import { RequestIdMiddleware } from "./common/middleware/request-id.middleware";
+import { DatabaseModule } from "./database/database.module";
 
 @Module({
+  imports: [DatabaseModule],
   controllers: [AppController],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
